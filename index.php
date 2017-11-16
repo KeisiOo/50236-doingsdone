@@ -61,7 +61,19 @@ $tasks = [
 		'category' => 'Домашние дела',
 		'done' => false
 	],
-]
+];
+
+function numOfTasks ($taskList, $nameProject) {
+	$count = 0;
+	foreach ($taskList as $value) {
+		if ($value['category'] == $nameProject) {
+			$count++;
+		} elseif ($nameProject == 'Все') {
+			$count = count($taskList);
+		};
+	};
+	return $count;
+};
 
 ?>
 <!DOCTYPE html>
@@ -110,7 +122,7 @@ $tasks = [
                     <?php foreach ($projects as $project): ?>
                         <li class="main-navigation__list-item <?php if ($project == $projects[0]): ?> main-navigation__list-item--active <?php endif; ?>">
                             <a class="main-navigation__list-item-link" href="#"><?php print($project); ?></a>
-                            <span class="main-navigation__list-item-count">24</span>
+                            <span class="main-navigation__list-item-count"><?php print(numOfTasks($tasks, $project)); ?></span>
                         </li>
                     <?php endforeach; ?>
                     </ul>

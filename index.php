@@ -64,13 +64,15 @@ $tasks = [
 ];
 
 function numOfTasks ($taskList, $nameProject) {
+	if ($nameProject == 'Все') {
+		return count($taskList);
+	};
+	
 	$count = 0;
 	foreach ($taskList as $value) {
 		if ($value['category'] == $nameProject) {
 			$count++;
-		} elseif ($nameProject == 'Все') {
-			$count = count($taskList);
-		};
+		} 
 	};
 	return $count;
 };

@@ -27,4 +27,27 @@ function numOfTasks ($taskList, $nameProject) {
     return $count;
 };
 
-?>
+function getCategoryById ($categoryId, $categories) {
+    foreach ($categories as $category) {
+        if ($categoryId == $category['id']) {
+            return $category;
+            break;
+        }
+    }
+}
+
+function filterTasksByCategory ($category, $tasks) {
+    if ($category['id'] == 0 ) {
+        return $tasks;
+    }
+
+    $resultTasks = [];
+
+    foreach ($tasks as $task) {
+        if ($task['category'] == $category['id']) {
+            $resultTasks[] = $task;
+        }
+    }
+    return $resultTasks;
+}
+

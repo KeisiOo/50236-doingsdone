@@ -14,52 +14,68 @@ $date_deadline = date("d.m.Y", $task_deadline_ts);
 // в эту переменную запишите кол-во дней до даты задачи
 $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
-$projects = [
-	'Все', 
-	'Входящие', 
-	'Учеба', 
-	'Работа', 
-	'Домашние дела', 
-	'Авто'
+$categories = [
+	[
+		'id' => 0,
+		'name' => 'Все'
+	],
+	[
+		'id' => 1,
+		'name' => 'Входящие'
+	],
+	[
+		'id' => 2,
+		'name' => 'Учеба'
+	],
+	[
+		'id' => 3,
+		'name' => 'Работа'
+	],
+	[
+		'id' => 4,
+		'name' => 'Домашние дела'
+	],
+	[
+		'id' => 5,
+		'name' => 'Авто'
+	]
 ];
-
+	
 $tasks = [
 	[
 		'task' => 'Собеседование в IT компании',
 		'date' => '01.06.2018',
-		'category' => 'Работа',
+		'category' => 3,
 		'done' => false
 	],
 	[
 		'task' => 'Выполнить тестовое задание',
 		'date' => '25.05.2018',
-		'category' => 'Работа',
+		'category' => 3,
 		'done' => false
 	],
 		[
 		'task' => 'Сделать задание первого раздела',
 		'date' => '21.04.2018',
-		'category' => 'Учеба',
+		'category' => 2,
 		'done' => true
 	],
 		[
 		'task' => 'Встреча с другом',
 		'date' => '22.04.2018',
-		'category' => 'Входящие',
+		'category' => 1,
 		'done' => false
 	],
 		[
 		'task' => 'Купить корм для кота',
 		'date' => '',
-		'category' => 'Домашние дела',
+		'category' => 4,
 		'done' => false
 	],
 		[
 		'task' => 'Заказать пиццу',
 		'date' => '',
-		'category' => 'Домашние дела',
+		'category' => 4,
 		'done' => false
 	],
 ];
-
-?>

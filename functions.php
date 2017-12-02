@@ -34,6 +34,7 @@ function getCategoryById ($categoryId, $categories) {
             break;
         }
     }
+    return null;
 }
 
 function filterTasksByCategory ($category, $tasks) {

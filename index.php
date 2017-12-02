@@ -4,6 +4,7 @@ require_once ('functions.php');
 require_once ('data.php');
 
 $category = [];
+$filteredTasks = $tasks;
 
 if (isset($_GET['project_id'])) {
 	$category = getCategoryById ($_GET['project_id'], $categories);

@@ -51,4 +51,3 @@ function filterTasksByCategory ($category, $tasks) {
     }
     return $resultTasks;
 }
-

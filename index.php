@@ -2,6 +2,8 @@
 
 require_once ('functions.php');
 require_once ('data.php');
+// require_once ('form.php');
+
 
 $category = [];
 $filteredTasks = $tasks;
@@ -17,11 +19,41 @@ if (isset($_GET['project_id'])) {
 	$filteredTasks = filterTasksByCategory ($category, $tasks);
 }
 
-$pageContent = includeTemplate ('templates/index.php', [
-	'tasks' => $filteredTasks,
-	'show_complete_tasks' => $show_complete_tasks,
-	'days_until_deadline' => $days_until_deadline
-]);
+if (isset($_GET['add'])) {
+	$add = $_GET['add'];
+	require_once ('form.php');
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	$task = $_POST;
+
+	$required = ['name', 'project', 'date'];
+	$dict = ['name' => 'Название', 'project' => 'Проект', 'date' => 'Дата выполнения'];
+	$errors = [];
+
+	foreach ($_POST as $key => $value) {
+		if (in_array($key, $required)) {
+			if (!$value) {
+				$errors[$dict[$key]] = 'Это поле надо заполнить';
+			}
+		}
+	}
+
+	if (count($errors)) {
+		$pageContent = includeTemplate('form.php', ['task' => $task, 'errors' => $errors]);
+	}
+	else {
+		$pageContent = includeTemplate('templates/layout.php', ['task' => $task]);
+	}
+	
+}
+else {
+	$pageContent = includeTemplate ('templates/index.php', [
+		'tasks' => $filteredTasks,
+		'show_complete_tasks' => $show_complete_tasks,
+		'days_until_deadline' => $days_until_deadline
+	]);
+}
 
 $layoutContent = includeTemplate ('templates/layout.php', [
 	'content' => $pageContent,

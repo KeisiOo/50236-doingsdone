@@ -21,33 +21,40 @@ if (isset($_GET['project_id'])) {
 
 if (isset($_GET['add'])) {
 	$add = $_GET['add'];
-	require_once ('form.php');
+	require_once ('templates/form.php');
 }
 
+$hasOverlay = ($_GET['add'] == 'true');
+
+$newTask = [
+	'task' => '',
+	'date' => '',
+	'category' => -1,
+	'done' => false
+];
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$task = $_POST;
+	$newTask = $_POST;
 
 	$required = ['name', 'project', 'date'];
-	$dict = ['name' => 'Название', 'project' => 'Проект', 'date' => 'Дата выполнения'];
 	$errors = [];
 
 	foreach ($_POST as $key => $value) {
 		if (in_array($key, $required)) {
 			if (!$value) {
-				$errors[$dict[$key]] = 'Это поле надо заполнить';
+				$errors[$key] = 'Это поле надо заполнить';
 			}
 		}
 	}
 
 	if (count($errors)) {
-		$pageContent = includeTemplate('form.php', ['task' => $task, 'errors' => $errors]);
+		$pageContent = includeTemplate('templates/form.php', ['newTask' => $newTask, 'errors' => $errors]);
 	}
-	else {
-		$pageContent = includeTemplate('templates/layout.php', ['task' => $task]);
-	}
-	
 }
+
 else {
+	// array_unshift($filteredTasks, $newTask);
 	$pageContent = includeTemplate ('templates/index.php', [
 		'tasks' => $filteredTasks,
 		'show_complete_tasks' => $show_complete_tasks,

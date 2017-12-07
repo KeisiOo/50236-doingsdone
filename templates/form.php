@@ -3,18 +3,18 @@
 
   <h2 class="modal__heading">Добавление задачи</h2>
 
-  <form class="form"  action="index.php" method="post">
+  <form class="form" enctype="multipart/form-data" action="index.php" method="post">
     <div class="form__row">
-      <?php $classname = isset($errors['Название']) ? "form__input--error" : "";
-      $value = isset($task['name']) ? $task['name'] : ""; ?>
+      <?php $classname = isset($errors['name']) ? "form__input--error" : "";
+      $value = isset($newTask['task']) ? $newTask['task'] : ""; ?>
       <label class="form__label" for="name">Название <sup>*</sup></label>
 
       <input class="form__input <?=$classname;?>" type="text" name="name" id="name" value="<?=$value;?>" placeholder="Введите название">
     </div>
 
     <div class="form__row">
-      <?php $classname = isset($errors['Проект']) ? "form__input--error" : "";
-      $value = isset($task['project']) ? $task['project'] : ""; ?>
+      <?php $classname = isset($errors['project']) ? "form__input--error" : "";
+      $value = isset($newTask['category']) ? $newTask['category'] : ""; ?>
       <label class="form__label" for="project">Проект <sup>*</sup></label>
 
       <select class="form__input form__input--select" name="project" id="project">
@@ -23,8 +23,8 @@
     </div>
 
     <div class="form__row">
-      <?php $classname = isset($errors['Дата выполнения']) ? "form__input--error" : "";
-      $value = isset($task['date']) ? $task['date'] : ""; ?>
+      <?php $classname = isset($errors['date']) ? "form__input--error" : "";
+      $value = isset($newTask['date']) ? $newTask['date'] : ""; ?>
       <label class="form__label" for="date">Дата выполнения <sup>*</sup></label>
 
       <input class="form__input form__input--date <?=$classname;?>" type="date" name="date" id="date" value="<?=$value;?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">

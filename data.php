@@ -14,6 +14,8 @@ $date_deadline = date("d.m.Y", $task_deadline_ts);
 // в эту переменную запишите кол-во дней до даты задачи
 $days_until_deadline = floor(($task_deadline_ts - $current_ts) / 86400);
 
+
+
 $categories = [
 	[
 		'id' => 0,

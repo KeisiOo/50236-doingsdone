@@ -1,8 +1,6 @@
 <?php
 
-require_once ('functions.php');
-require_once ('data.php');
-// require_once ('form.php');
+require_once('app/init.php');
 
 
 $category = [];
@@ -19,26 +17,28 @@ if (isset($_GET['project_id'])) {
 	$filteredTasks = filterTasksByCategory ($category, $tasks);
 }
 
-if (isset($_GET['add'])) {
-	$add = $_GET['add'];
-	require_once ('templates/form.php');
-}
+function getForm ($categories, $tasks) {
+    $newTask = [
+        'task' => '',
+        'date' => '',
+        'category' => -1,
+        'done' => false
+    ];
 
-$hasOverlay = ($_GET['add'] == 'true');
+    if ($_SERVER['REQUEST_METHOD'] != 'POST' && isset($_GET['add']) && $_GET['add'] == 'true') {
+        return [includeTemplate ('templates/form.php', [
+            'newTask' => $newTask,
+            'errors' => [],
+            'categories' => $categories]), true, $tasks
+    	];
+    }
 
-$newTask = [
-	'task' => '',
-	'date' => '',
-	'category' => -1,
-	'done' => false
-];
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        return ['', false, $tasks];
+    }
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$newTask = $_POST;
-
-	$required = ['name', 'project', 'date'];
-	$errors = [];
+    $required = ['task', 'category', 'date'];
+    $errors = [];
 
 	foreach ($_POST as $key => $value) {
 		if (in_array($key, $required)) {
@@ -48,29 +48,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 	}
 
-	if (count($errors)) {
-		$pageContent = includeTemplate('templates/form.php', ['newTask' => $newTask, 'errors' => $errors]);
-	}
+    if ($_POST['category'] == -1) {
+        $errors['category'] = "Выберите значение";
+    }
+
+    $newTask['task'] = $_POST['task'];
+    $newTask['date'] = $_POST['date'];
+    $newTask['category'] = $_POST['category'];
+
+    if ($_FILES['preview']['name']) {
+        $uploadFile = $_SERVER['DOCUMENT_ROOT'] . basename($_FILES['preview']['name']);
+        if (!move_uploaded_file($_FILES['preview']['tmp_name'], $uploadFile)) {
+            $errors['preview'] = "Возможная атака с помощью файловой загрузки!";
+        }
+    }
+
+    if (count($errors)) {
+        return [ includeTemplate('templates/form.php', [
+            'newTask' => $newTask,
+            'errors' => $errors,
+            'categories' => $categories]), true, $tasks 
+   		];
+    }
+
+    array_unshift($tasks, $newTask);
+    return ['', false, $tasks];
 }
 
-else {
-	// array_unshift($filteredTasks, $newTask);
-	$pageContent = includeTemplate ('templates/index.php', [
-		'tasks' => $filteredTasks,
-		'show_complete_tasks' => $show_complete_tasks,
-		'days_until_deadline' => $days_until_deadline
-	]);
-}
+list($form, $showForm, $filteredTasks) = getForm ($categories, $filteredTasks);
+
+$pageContent = includeTemplate ('templates/index.php', [
+    'tasks' => $filteredTasks,
+    'show_complete_tasks' => $show_complete_tasks,
+    'days_until_deadline' => $days_until_deadline
+]);
 
 $layoutContent = includeTemplate ('templates/layout.php', [
+    'form' => $form,
 	'content' => $pageContent,
 	'categories' => $categories,
 	'tasks' => $tasks,
 	'username' => 'Константин',
-	'title' => 'Дела в порядке'
+	'title' => 'Дела в порядке',
+    'hasOverlay' => $showForm
 ]);
 
 print($layoutContent);
-
-?>
 

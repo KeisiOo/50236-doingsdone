@@ -5,21 +5,29 @@
 
   <form class="form" enctype="multipart/form-data" action="index.php" method="post">
     <div class="form__row">
-      <?php $classname = isset($errors['name']) ? "form__input--error" : "";
+
+      <?php $classname = isset($errors['task']) ? "form__input--error" : "";
       $value = isset($newTask['task']) ? $newTask['task'] : ""; ?>
       <label class="form__label" for="name">Название <sup>*</sup></label>
 
-      <input class="form__input <?=$classname;?>" type="text" name="name" id="name" value="<?=$value;?>" placeholder="Введите название">
+      <input class="form__input <?=$classname;?>" type="text" name="task" id="name" value="<?=$value;?>" placeholder="Введите название">
+        <p class="form__message"><?= isset($errors['task']) ? $errors['task'] : '' ?></p>
     </div>
 
     <div class="form__row">
-      <?php $classname = isset($errors['project']) ? "form__input--error" : "";
+      <?php $classname = isset($errors['category']) ? "form__input--error" : "";
       $value = isset($newTask['category']) ? $newTask['category'] : ""; ?>
       <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-      <select class="form__input form__input--select" name="project" id="project">
-        <option value="">Входящие</option>
+      <select class="form__input form__input--select <?=$classname;?>" name="category" id="project">
+            <option value="-1">Выберите категорию</option>
+          <?php foreach ($categories as $category): ?>
+            <option value="<?= $category["id"] ?>" <?= $value == $category["id"] ? "selected='selected'" : "" ?>>
+                <?= $category['name'] ?>
+            </option>
+          <?php endforeach; ?>
       </select>
+        <p class="form__message"><?= isset($errors['category']) ? $errors['category'] : '' ?></p>
     </div>
 
     <div class="form__row">
@@ -28,6 +36,7 @@
       <label class="form__label" for="date">Дата выполнения <sup>*</sup></label>
 
       <input class="form__input form__input--date <?=$classname;?>" type="date" name="date" id="date" value="<?=$value;?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+        <p class="form__message"><?= isset($errors['date']) ? $errors['date'] : '' ?></p>
     </div>
 
     <div class="form__row">
@@ -40,6 +49,7 @@
             <span>Выберите файл</span>
         </label>
       </div>
+        <p class="form__message"></p>
     </div>
 
     <div class="form__row form__row--controls">

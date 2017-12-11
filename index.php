@@ -77,15 +77,74 @@ function getForm ($categories, $tasks) {
 
 list($form, $showForm, $filteredTasks) = getForm ($categories, $filteredTasks);
 
+function getUser ($users) {
+    $authUser = [
+        'email' => '',
+        'password' => '',
+    ];
+
+    if ($_SERVER['REQUEST_METHOD'] != 'POST' && isset($_GET['auth']) && $_GET['auth'] == 'true') {
+        return [includeTemplate ('templates/auth_form.php', [
+            'authUser' => $authUser,
+            'errors' => [],
+            'users' => $users]), true
+        ];
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        return '';
+    }
+
+    $required = ['email', 'password'];
+    $errors = [];
+
+    foreach ($_POST as $key => $value) {
+        if (in_array($key, $required)) {
+            if (!$value) {
+                $errors[$key] = 'Это поле надо заполнить';
+            }
+        }
+    }
+
+    $authUser['email'] = $_POST['email'];
+    $authUser['password'] = $_POST['password'];
+
+    if ($user = searchUserByEmail($authUser['email'], $users)) {
+        if (password_verify($authUser['password'], $user['password'])) {
+            $_SESSION['user'] = $user;
+        }
+        else {
+            $errors['password'] = 'Неверный пароль';
+        }
+    }
+    else {
+        $errors['email'] = 'Такой пользователь не найден';
+    }
+
+    if (count($errors)) {
+        return [includeTemplate('templates/auth_form.php', [
+            'authUser' => $authUser,
+            'errors' => $errors,
+            'users' => $users]), true
+        ];
+    }
+
+    return ''; 
+}
+
+list($form, $showForm, $filteredTasks) = getUser($users);
+
 $pageContent = includeTemplate ('templates/index.php', [
     'tasks' => $filteredTasks,
     'show_complete_tasks' => $show_complete_tasks,
     'days_until_deadline' => $days_until_deadline
 ]);
 
+$guest = includeTemplate('templates/guest.php', []);
+
 $layoutContent = includeTemplate ('templates/layout.php', [
     'form' => $form,
-	'content' => $pageContent,
+	'content' => $guest,
 	'categories' => $categories,
 	'tasks' => $tasks,
 	'username' => 'Константин',

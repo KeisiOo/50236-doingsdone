@@ -19,7 +19,7 @@
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus" href="index.php?add=true">Добавить задачу</a>
+                <!-- <a class="main-header__side-item button button--plus" href="index.php?add=true">Добавить задачу</a>
 
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__image">
@@ -31,7 +31,8 @@
 
                         <a href="#">Выйти</a>
                     </div>
-                </div>
+                </div> -->
+                <a class="main-header__side-item button button--transparent" href="index.php?auth=true">Войти</a>
             </div>
         </header>
 
